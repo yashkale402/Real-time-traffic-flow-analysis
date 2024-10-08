@@ -5,8 +5,7 @@
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [Technologies Used](#technologies-used)
-- [Author](#author)
+
 
 ## Project Overview
 The **Traffic Flow Analysis (Stack)** project simulates and analyzes vehicle flow on a road using a stack data structure. It allows for real-time tracking of vehicles entering and leaving the road, traffic level monitoring, and predictive analytics for future traffic patterns.
@@ -30,12 +29,7 @@ To get started with the project, follow these instructions to set up your develo
 - **Terminal/Command Line Interface**: You will need to use a terminal or command prompt to compile and run the program.
 
 ### Installation
-1. **Clone the Repository** (or download the source code):
-   ```bash
-   git clone https://github.com/yourusername/TrafficFlowAnalysis.git
-   cd TrafficFlowAnalysis
-
-2. **Compile the Program**: In your terminal, navigate to the directory containing the traffic_flow_analysis.c file and run:
+1. **Compile the Program**: In your terminal, navigate to the directory containing the traffic_flow_analysis.c file and run:
 ```bash
 gcc traffic_flow_analysis.c -o traffic_flow_analysis
 ```
@@ -64,7 +58,3 @@ Menu Options: Follow the on-screen menu to:
 9. **Predict future traffic level**
 10. **Exit**
 -- **Enter your choice:** 
-
-Technologies Used**
-C Programming Language
-Standard Libraries (stdio.h, stdlib.h, string.h, time.h).
