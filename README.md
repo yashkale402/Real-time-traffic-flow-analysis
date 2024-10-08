@@ -63,7 +63,7 @@ Menu Options: Follow the on-screen menu to:
 8. **View traffic statistics**
 9. **Predict future traffic level**
 10. **Exit**
-**Enter your choice:** 
+-- **Enter your choice:** 
 
 Technologies Used**
 C Programming Language
