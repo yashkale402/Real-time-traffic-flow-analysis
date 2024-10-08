@@ -38,8 +38,9 @@ To get started with the project, follow these instructions to set up your develo
 2. **Compile the Program**: In your terminal, navigate to the directory containing the traffic_flow_analysis.c file and run:
 ```bash
 gcc traffic_flow_analysis.c -o traffic_flow_analysis
-Usage
 ```
+**Usage**
+
 1. **Run the Program: After successful compilation, run the program using**:
 ```bash
 
