@@ -3,19 +3,22 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX 10  // Default maximum number of vehicles that the road can handle
+#define MAX 100  // Maximum number of vehicles that the road can handle
+#define FILENAME "traffic_data.txt"
 
+// Structure for vehicle data
 typedef struct {
-    int number;               // Vehicle number
-    char type[20];           // Vehicle type (car, truck, bus, etc.)
-    time_t entry_time;       // Entry time of the vehicle
-    int priority;            // Priority level of the vehicle (1: High, 2: Medium, 3: Low)
+    int number;              // Vehicle number
+    char type[20];          // Vehicle type (car, truck, bus, etc.)
+    time_t entry_time;      // Entry time of the vehicle
+    int priority;           // Priority level of the vehicle (1: High, 2: Medium, 3: Low)
 } Vehicle;
 
+// Structure for the stack
 typedef struct {
     Vehicle vehicles[MAX];
     int top;
-    int max_capacity;        // Dynamic maximum capacity
+    int max_capacity;       // Dynamic maximum capacity
 } Stack;
 
 // Initialize the stack
@@ -50,6 +53,16 @@ void push(Stack *s, int number, char *type, int priority) {
         strcpy(s->vehicles[i + 1].type, type);
         s->vehicles[i + 1].entry_time = time(NULL);
         s->vehicles[i + 1].priority = priority;
+
+        // Save vehicle entry to file
+        FILE *file = fopen(FILENAME, "a");
+        if (file) {
+            fprintf(file, "Vehicle %d (%s) entered at %s", number, type, ctime(&s->vehicles[i + 1].entry_time));
+            fclose(file);
+        } else {
+            printf("Error opening file!\n");
+        }
+
         printf("Vehicle %d (%s) with priority %d entered the road at %s", number, type, priority, ctime(&s->vehicles[i + 1].entry_time));
     }
 }
@@ -61,6 +74,16 @@ void pop(Stack *s) {
     } else {
         Vehicle vehicle = s->vehicles[s->top];
         time_t exit_time = time(NULL);
+
+        // Save vehicle exit to file
+        FILE *file = fopen(FILENAME, "a");
+        if (file) {
+            fprintf(file, "Vehicle %d (%s) left at %s", vehicle.number, vehicle.type, ctime(&exit_time));
+            fclose(file);
+        } else {
+            printf("Error opening file!\n");
+        }
+
         printf("Vehicle %d (%s) has left the road at %s", vehicle.number, vehicle.type, ctime(&exit_time));
         s->top--;
     }
@@ -108,38 +131,79 @@ void trafficLevel(Stack *s) {
     }
 }
 
-// Function to display average traffic level (simplified for demo)
-void averageTrafficLevel(Stack *s) {
-    int vehiclesOnRoad = s->top + 1;
-    printf("Average Traffic Level during this session: ");
-    
-    if (vehiclesOnRoad == 0) {
-        printf("No traffic.\n");
-    } else if (vehiclesOnRoad <= s->max_capacity / 3) {
-        printf("Low Traffic (Smooth flow).\n");
-    } else if (vehiclesOnRoad <= (2 * s->max_capacity) / 3) {
-        printf("Medium Traffic (Moderate flow).\n");
-    } else if (vehiclesOnRoad < s->max_capacity) {
-        printf("High Traffic (Heavy flow).\n");
-    } else {
-        printf("Traffic Congestion (Road Full).\n");
+// Function to change the road capacity
+void changeCapacity(Stack *s) {
+    int new_capacity;
+    printf("Enter new maximum capacity for the road: ");
+    scanf("%d", &new_capacity);
+
+    if (new_capacity > MAX) {
+        printf("Maximum capacity exceeded!\n");
+        return;
     }
+
+    s->max_capacity = new_capacity;
+    printf("Road capacity updated to %d vehicles.\n", new_capacity);
 }
 
-// Function to generate detailed traffic report
-void generateTrafficReport(Stack *s) {
-    printf("\n--- Traffic Report ---\n");
-    printf("Total vehicles on the road: %d\n", s->top + 1);
+// Function to display average time spent on the road
+void averageTimeOnRoad(Stack *s) {
+    if (isEmpty(s)) {
+        printf("No vehicles on the road to calculate average time.\n");
+        return;
+    }
+
+    time_t total_time = 0;
     for (int i = 0; i <= s->top; i++) {
-        Vehicle vehicle = s->vehicles[i];
-        printf("Vehicle %d (%s), Priority: %d, Entered at: %s", vehicle.number, vehicle.type, vehicle.priority, ctime(&vehicle.entry_time));
+        total_time += difftime(time(NULL), s->vehicles[i].entry_time);
+    }
+
+    double average_time = total_time / (double)(s->top + 1);
+    printf("Average time spent on the road: %.2f seconds.\n", average_time);
+}
+
+// Function to display traffic statistics
+void displayStatistics(Stack *s) {
+    if (isEmpty(s)) {
+        printf("No traffic data available.\n");
+        return;
+    }
+
+    int car_count = 0, truck_count = 0, bus_count = 0;
+    for (int i = 0; i <= s->top; i++) {
+        if (strcmp(s->vehicles[i].type, "car") == 0) car_count++;
+        else if (strcmp(s->vehicles[i].type, "truck") == 0) truck_count++;
+        else if (strcmp(s->vehicles[i].type, "bus") == 0) bus_count++;
+    }
+
+    printf("Traffic Statistics:\n");
+    printf("Total Vehicles: %d\n", s->top + 1);
+    printf("Cars: %d, Trucks: %d, Buses: %d\n", car_count, truck_count, bus_count);
+}
+
+void userLogin() {
+    char username[20], password[20];
+    printf("Enter username: ");
+    scanf("%s", username);
+    printf("Enter password: ");
+    scanf("%s", password);
+
+    // Simple hardcoded credentials for demonstration purposes
+    if (strcmp(username, "admin") == 0 && strcmp(password, "password") == 0) {
+        printf("Login successful!\n");
+    } else {
+        printf("Login failed! Exiting program.\n");
+        exit(1);
     }
 }
 
 int main() {
     Stack road;
     int custom_capacity;
-    
+
+    // User authentication
+    userLogin();
+
     printf("Enter the maximum capacity of the road: ");
     scanf("%d", &custom_capacity);
     
@@ -155,8 +219,10 @@ int main() {
         printf("3. Check the top vehicle (Peek)\n");
         printf("4. Display traffic on the road\n");
         printf("5. Show traffic level on the road\n");
-        printf("6. Generate traffic report\n");
-        printf("7. Exit with session summary\n");
+        printf("6. Change road capacity\n");
+        printf("7. Average time on road\n");
+        printf("8. Display traffic statistics\n");
+        printf("9. Exit with session summary\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
         
@@ -185,11 +251,16 @@ int main() {
                 trafficLevel(&road);
                 break;
             case 6:
-                generateTrafficReport(&road);
+                changeCapacity(&road);
                 break;
             case 7:
+                averageTimeOnRoad(&road);
+                break;
+            case 8:
+                displayStatistics(&road);
+                break;
+            case 9:
                 printf("Exiting...\n");
-                averageTrafficLevel(&road);
                 exit(0);
             default:
                 printf("Invalid choice!\n");
