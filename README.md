@@ -52,11 +52,18 @@ Enter the password: 0001
 ```
 Menu Options: Follow the on-screen menu to:
 
-Add vehicles to the road.
-Remove vehicles from the road.
-View the current traffic status and statistics.
-Change road capacity dynamically.
-Predict future traffic conditions.
-Technologies Used
+1. **Vehicle enters the road**
+2. **Vehicle leaves the road**
+3. **View top vehicle on road**
+4. **Display all vehicles on road**
+5. **Display current traffic level**
+6. **Change road capacity**
+7. **Display average time on road**
+8. **View traffic statistics**
+9. **Predict future traffic level**
+10. **Exit**
+**Enter your choice:** 
+
+Technologies Used**
 C Programming Language
 Standard Libraries (stdio.h, stdlib.h, string.h, time.h).
