@@ -49,6 +49,7 @@ Usage
 ```bash
 Enter the username: yashh
 Enter the password: 0001
+```
 Menu Options: Follow the on-screen menu to:
 
 Add vehicles to the road.
@@ -59,4 +60,3 @@ Predict future traffic conditions.
 Technologies Used
 C Programming Language
 Standard Libraries (stdio.h, stdlib.h, string.h, time.h).
-```
