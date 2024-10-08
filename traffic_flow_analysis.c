@@ -9,9 +9,9 @@
 // Structure for vehicle data
 typedef struct {
     int number;              // Vehicle number
-    char type[20];          // Vehicle type (car, truck, bus, etc.)
-    time_t entry_time;      // Entry time of the vehicle
-    int priority;           // Priority level of the vehicle (1: High, 2: Medium, 3: Low)
+    char type[20];           // Vehicle type (car, truck, bus, etc.)
+    time_t entry_time;       // Entry time of the vehicle
+    int priority;            // Priority level of the vehicle (1: High, 2: Medium, 3: Low)
 } Vehicle;
 
 // Structure for the stack
@@ -112,10 +112,9 @@ void display(Stack *s) {
     }
 }
 
-// Function to display traffic level
+// Display traffic level
 void trafficLevel(Stack *s) {
     int vehiclesOnRoad = s->top + 1; // Number of vehicles on the road
-
     printf("Traffic Level: ");
     
     if (vehiclesOnRoad == 0) {
@@ -131,7 +130,7 @@ void trafficLevel(Stack *s) {
     }
 }
 
-// Function to change the road capacity
+// Change the road capacity
 void changeCapacity(Stack *s) {
     int new_capacity;
     printf("Enter new maximum capacity for the road: ");
@@ -146,7 +145,7 @@ void changeCapacity(Stack *s) {
     printf("Road capacity updated to %d vehicles.\n", new_capacity);
 }
 
-// Function to display average time spent on the road
+// Average time spent on the road
 void averageTimeOnRoad(Stack *s) {
     if (isEmpty(s)) {
         printf("No vehicles on the road to calculate average time.\n");
@@ -162,7 +161,21 @@ void averageTimeOnRoad(Stack *s) {
     printf("Average time spent on the road: %.2f seconds.\n", average_time);
 }
 
-// Function to display traffic statistics
+// Predict traffic level based on current pattern
+void trafficPrediction(Stack *s) {
+    int vehiclesOnRoad = s->top + 1;
+
+    printf("\nTraffic Prediction:\n");
+    if (vehiclesOnRoad > s->max_capacity * 0.9) {
+        printf("Warning: Heavy congestion expected in the next 10 minutes!\n");
+    } else if (vehiclesOnRoad > s->max_capacity * 0.5) {
+        printf("Moderate traffic flow predicted for the next 10 minutes.\n");
+    } else {
+        printf("Traffic is expected to remain smooth.\n");
+    }
+}
+
+// Traffic statistics by vehicle type
 void displayStatistics(Stack *s) {
     if (isEmpty(s)) {
         printf("No traffic data available.\n");
@@ -176,11 +189,12 @@ void displayStatistics(Stack *s) {
         else if (strcmp(s->vehicles[i].type, "bus") == 0) bus_count++;
     }
 
-    printf("Traffic Statistics:\n");
+    printf("\nTraffic Statistics:\n");
     printf("Total Vehicles: %d\n", s->top + 1);
     printf("Cars: %d, Trucks: %d, Buses: %d\n", car_count, truck_count, bus_count);
 }
 
+// Login function for user authentication
 void userLogin() {
     char username[20], password[20];
     printf("Enter username: ");
@@ -188,8 +202,8 @@ void userLogin() {
     printf("Enter password: ");
     scanf("%s", password);
 
-    // Simple hardcoded credentials for demonstration purposes
-    if (strcmp(username, "admin") == 0 && strcmp(password, "password") == 0) {
+    // Username: yashh, Password: 0001
+    if (strcmp(username, "yashh") == 0 && strcmp(password, "0001") == 0) {
         printf("Login successful!\n");
     } else {
         printf("Login failed! Exiting program.\n");
@@ -213,16 +227,17 @@ int main() {
     char vehicle_type[20];
     
     while (1) {
-        printf("\n--- Traffic Flow Analysis (Stack) ---\n");
-        printf("1. Vehicle enters the road (Push)\n");
-        printf("2. Vehicle leaves the road (Pop)\n");
-        printf("3. Check the top vehicle (Peek)\n");
-        printf("4. Display traffic on the road\n");
-        printf("5. Show traffic level on the road\n");
+        printf("\n--- Traffic Flow Analysis (Advanced) ---\n");
+        printf("1. Vehicle enters the road\n");
+        printf("2. Vehicle leaves the road\n");
+        printf("3. View top vehicle on road\n");
+        printf("4. Display all vehicles on road\n");
+        printf("5. Display current traffic level\n");
         printf("6. Change road capacity\n");
-        printf("7. Average time on road\n");
-        printf("8. Display traffic statistics\n");
-        printf("9. Exit with session summary\n");
+        printf("7. Display average time on road\n");
+        printf("8. View traffic statistics\n");
+        printf("9. Predict future traffic level\n");
+        printf("10. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
         
@@ -260,6 +275,9 @@ int main() {
                 displayStatistics(&road);
                 break;
             case 9:
+                trafficPrediction(&road);
+                break;
+            case 10:
                 printf("Exiting...\n");
                 exit(0);
             default:
