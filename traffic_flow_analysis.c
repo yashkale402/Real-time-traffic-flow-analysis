@@ -9,6 +9,7 @@ typedef struct {
     int number;               // Vehicle number
     char type[20];           // Vehicle type (car, truck, bus, etc.)
     time_t entry_time;       // Entry time of the vehicle
+    int priority;            // Priority level of the vehicle (1: High, 2: Medium, 3: Low)
 } Vehicle;
 
 typedef struct {
@@ -34,15 +35,22 @@ int isEmpty(Stack *s) {
 }
 
 // Add a vehicle to the road (Push operation)
-void push(Stack *s, int number, char *type) {
+void push(Stack *s, int number, char *type, int priority) {
     if (isFull(s)) {
         printf("The road is full! Traffic congestion occurred.\n");
     } else {
+        // Insert vehicle based on priority
+        int i = s->top;
+        while (i >= 0 && s->vehicles[i].priority >= priority) {
+            s->vehicles[i + 1] = s->vehicles[i]; // Shift vehicles to make space
+            i--;
+        }
         s->top++;
-        s->vehicles[s->top].number = number;
-        strcpy(s->vehicles[s->top].type, type);
-        s->vehicles[s->top].entry_time = time(NULL);
-        printf("Vehicle %d (%s) entered the road at %s", number, type, ctime(&s->vehicles[s->top].entry_time));
+        s->vehicles[i + 1].number = number;
+        strcpy(s->vehicles[i + 1].type, type);
+        s->vehicles[i + 1].entry_time = time(NULL);
+        s->vehicles[i + 1].priority = priority;
+        printf("Vehicle %d (%s) with priority %d entered the road at %s", number, type, priority, ctime(&s->vehicles[i + 1].entry_time));
     }
 }
 
@@ -118,6 +126,16 @@ void averageTrafficLevel(Stack *s) {
     }
 }
 
+// Function to generate detailed traffic report
+void generateTrafficReport(Stack *s) {
+    printf("\n--- Traffic Report ---\n");
+    printf("Total vehicles on the road: %d\n", s->top + 1);
+    for (int i = 0; i <= s->top; i++) {
+        Vehicle vehicle = s->vehicles[i];
+        printf("Vehicle %d (%s), Priority: %d, Entered at: %s", vehicle.number, vehicle.type, vehicle.priority, ctime(&vehicle.entry_time));
+    }
+}
+
 int main() {
     Stack road;
     int custom_capacity;
@@ -127,7 +145,7 @@ int main() {
     
     init(&road, custom_capacity);
     
-    int choice, vehicle_number;
+    int choice, vehicle_number, priority;
     char vehicle_type[20];
     
     while (1) {
@@ -137,7 +155,8 @@ int main() {
         printf("3. Check the top vehicle (Peek)\n");
         printf("4. Display traffic on the road\n");
         printf("5. Show traffic level on the road\n");
-        printf("6. Exit with session summary\n");
+        printf("6. Generate traffic report\n");
+        printf("7. Exit with session summary\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
         
@@ -147,7 +166,9 @@ int main() {
                 scanf("%d", &vehicle_number);
                 printf("Enter vehicle type (car, truck, bus, etc.): ");
                 scanf("%s", vehicle_type);
-                push(&road, vehicle_number, vehicle_type);
+                printf("Enter vehicle priority (1: High, 2: Medium, 3: Low): ");
+                scanf("%d", &priority);
+                push(&road, vehicle_number, vehicle_type, priority);
                 trafficLevel(&road);
                 break;
             case 2:
@@ -164,6 +185,9 @@ int main() {
                 trafficLevel(&road);
                 break;
             case 6:
+                generateTrafficReport(&road);
+                break;
+            case 7:
                 printf("Exiting...\n");
                 averageTrafficLevel(&road);
                 exit(0);
